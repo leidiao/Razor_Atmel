@@ -35,6 +35,7 @@ Runs current task state.  Should only be called once in main loop.
 **********************************************************************************************************************/
 
 #include "configuration.h"
+#define COLOR_CYCLE_TIME   (u16)500    /* Time to hold each color */
 
 /***********************************************************************************************************************
 Global variable definitions with scope across entire project.
@@ -137,7 +138,78 @@ State Machine Function Definitions
 /* Wait for a message to be queued */
 static void UserAppSM_Idle(void)
 {
+    static u16 u16Counter = COLOR_CYCLE_TIME;
+  static u8  u8ColorIndex=0;
+  u16Counter--;
+  if(u16Counter == 0)
+  {
+    u16Counter = COLOR_CYCLE_TIME;
     
+     switch(u8ColorIndex)
+      {
+        case 0: /* white */
+          LedOn(LCD_RED);
+          LedOn(LCD_GREEN);
+          LedOn(LCD_BLUE);
+          LedOff(RED);
+          LedOn(WHITE);
+          break;
+
+        case 1: /* purple */
+          LedOn(LCD_RED);
+          LedOff(LCD_GREEN);
+          LedOn(LCD_BLUE);
+          LedOff(WHITE);
+          LedOn(PURPLE);
+          break;
+          
+        case 2: /* blue */
+          LedOff(LCD_RED);
+          LedOff(LCD_GREEN);
+          LedOn(LCD_BLUE);
+          LedOff(PURPLE);
+          LedOn(BLUE);
+          break;
+          
+        case 3: /* cyan */
+          LedOff(LCD_RED);
+          LedOn(LCD_GREEN);
+          LedOn(LCD_BLUE);
+          LedOff(BLUE);
+          LedOn(CYAN);
+          break;
+          
+        case 4: /* green */
+          LedOff(LCD_RED);
+          LedOn(LCD_GREEN);
+          LedOff(LCD_BLUE);
+          LedOff(CYAN);
+          LedOn(GREEN);
+          break;
+          
+        case 5: /* yellow */
+          LedOn(LCD_RED);
+          LedOn(LCD_GREEN);
+          LedOff(LCD_BLUE);
+          LedOff(GREEN);
+          LedOn(YELLOW);
+          break;
+          
+        case 6: /* red */
+          LedOn(LCD_RED);
+          LedOff(LCD_GREEN);
+          LedOff(LCD_BLUE);
+          LedOff(YELLOW);
+          LedOn(RED);
+          break;
+      } /* end switch */
+     u8ColorIndex++;
+     if(u8ColorIndex==7)
+     {
+       u8ColorIndex=0;
+     }
+  }
+        
 } /* end UserAppSM_Idle() */
      
 
