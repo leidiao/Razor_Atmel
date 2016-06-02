@@ -35,7 +35,7 @@ Runs current task state.  Should only be called once in main loop.
 **********************************************************************************************************************/
 
 #include "configuration.h"
-
+#define CYCLY_TIME 300
 /***********************************************************************************************************************
 Global variable definitions with scope across entire project.
 All Global variable names shall start with "G_"
@@ -137,7 +137,58 @@ State Machine Function Definitions
 /* Wait for a message to be queued */
 static void UserAppSM_Idle(void)
 {
-    
+   
+   static bool bOn=FALSE;
+   static u16 u16count=CYCLY_TIME;
+   static u8 u8index=0;
+   static u8 u8index2=0;
+   static char On_Off[]={TRUE,FALSE};
+   /*The frequency of the music*/
+   static u16 u16Frequency[]={
+                               330,294,262,294,330,330,330,0,
+                               294,294,294,0,
+                               330,392,392,0,
+                               330,294,262,294,330,330,330,0,
+                               330,294,294,330,294,262,0
+                             };
+   u16count--;
+   /*Circle every 1ms*/
+   if(u16count==0)
+   {
+     u16count=CYCLY_TIME;
+     /*test whether button is be pressed,yes:TRUE;no:FALSE*/
+     if(WasButtonPressed(BUTTON1))
+     {  
+       ButtonAcknowledge(BUTTON1);
+       u8index2++;
+     }
+
+   /*turn off the buzzer*/
+    if(bOn)
+    {
+       if( On_Off[(u8index2+1)%2])
+       {
+         bOn = FALSE;
+       }
+       PWMAudioOff(BUZZER1);
+       u8index=0;
+    }
+    /*turn on the buzzer*/
+    else
+    {  
+       if( On_Off[(u8index2+1)%2]==FALSE)
+       {
+         bOn = TRUE;
+       } 
+       PWMAudioSetFrequency(BUZZER1,u16Frequency[u8index] );
+       PWMAudioOn(BUZZER1);
+       u8index++;
+       if(u8index==31)
+       {
+         u8index=0;
+       }   
+    }  
+   }
 } /* end UserAppSM_Idle() */
      
 
