@@ -137,6 +137,47 @@ State Machine Function Definitions
 /* Wait for a message to be queued */
 static void UserAppSM_Idle(void)
 {
+   static bool bYellowBlink = FALSE;
+  static bool Choice[]={TRUE,FALSE};
+  static LedRateType BlinkRate[] = {LED_8HZ, LED_4HZ, LED_2HZ, LED_1HZ};
+  static u8 u8index1=0;
+  static u8 u8index2=0;
+   if(WasButtonPressed(BUTTON0))
+    {
+      u8index1++;
+    }
+    
+ if( WasButtonPressed(BUTTON0)||WasButtonPressed(BUTTON1))
+  {
+    /* Be sure to acknowledge the button press */
+   
+    if(WasButtonPressed(BUTTON1))
+    {
+      u8index2++;
+    }
+      
+    
+    ButtonAcknowledge(BUTTON0);
+    ButtonAcknowledge(BUTTON1);
+
+    /* If the LED is already blinking, toggle it off */
+    if(bYellowBlink)
+    {
+      bYellowBlink = FALSE;
+      LedOff(YELLOW);
+    }
+    
+     /* start blinking the LED at the current rate */
+      if(Choice[(u8index1+1)%2]==FALSE)
+      {
+      bYellowBlink = TRUE;
+       LedBlink(YELLOW, BlinkRate[(u8index2+3)%4]);
+      }
+     
+      
+    
+  }
+  
     
 } /* end UserAppSM_Idle() */
      
