@@ -142,6 +142,27 @@ static void UserAppSM_Idle(void)
   static LedRateType BlinkRate[] = {LED_8HZ, LED_4HZ, LED_2HZ, LED_1HZ};
   static u8 u8index1=0;
   static u8 u8index2=0;
+  if( IsButtonPressed(BUTTON2) )
+  {
+    /* The button is currently pressed, so make sure the LED is on */
+     LedOn(PURPLE);
+  }
+  else
+  {
+    /* The button is not pressed, so make sure the LED is off */
+    LedOff(PURPLE);
+  }
+  if( IsButtonPressed(BUTTON3) )
+  {
+   /* The button is currently pressed, so make sure the LED is on */
+    LedOn(BLUE);
+  }
+  else
+  {
+   /* The button is not pressed, so make sure the LED is off */
+   LedOff(BLUE);
+  }
+
    if(WasButtonPressed(BUTTON0))
     {
       u8index1++;
